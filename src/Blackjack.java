@@ -30,7 +30,7 @@ public class Blackjack {
 
         printDealer();
         printPlayer();
-
+        printTotals();
     }
 
     private void playerCard(){
@@ -63,8 +63,20 @@ public class Blackjack {
         System.out.println();
     }
 
-    public void printTotal(){
-
+    public void printTotals(){
+        if(dealerReveal){
+            int DTotal = 0;
+            for(Card card: dealer){
+                DTotal += card.getValue();
+            }
+            System.out.print("DTotal: " + DTotal);
+        } else {
+            System.out.print("DTotal: " + dealer.get(0).getValue() + " + " + "[X]");
+        }
+        int PTotal = 0;
+        for(Card card: player){
+            PTotal += card.getValue();
+        }
+        System.out.println("       PTotal: " + PTotal);
     }
-
 }
