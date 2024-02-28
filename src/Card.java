@@ -13,12 +13,22 @@ public class Card {
     }
 
     public int getValue() {
-        return value;
+        if(value < 11){
+            return value;
+        } else if(value == 14) {
+            return 11;
+        } else {
+            return 10;
+        }
     }
 
     public String toString(){
         String[] suits = {"Hearts","Diamonds","Clubs","Spades"};
         String[] values = {"2","3","4","5","6","7","8","9","10","J","Q","K","A"};
         return values[this.value-2] + " of " + suits[this.suit];
+    }
+
+    public void setValue(int value){
+        this.value = value;
     }
 }
