@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Blackjack {
@@ -13,7 +14,6 @@ public class Blackjack {
         player = new ArrayList<>();
         dealer = new ArrayList<>();
         kb = new Scanner(System.in);
-        dealerReveal = false;
     }
     
     public static void main(String[] args){
@@ -22,16 +22,21 @@ public class Blackjack {
     }
 
     private void run(){
+        initGame();
+    }
+
+    public void initGame(){
+        deck.iniDeck();
+        player.clear();
+        dealer.clear();
+        dealerReveal = false;
         deck.shuffle();
         dealerCard();
         dealerCard();
         playerCard();
         playerCard();
-
         printAll();
-
         playerTurn();
-
     }
 
     public void printAll(){
@@ -43,10 +48,11 @@ public class Blackjack {
 
     public void playerTurn(){
         System.out.println("Would you like to [Hit] or [Stand]?");
-
-        if(getCommand().equals("Stand")){
+        String command = getCommand();
+        if(command.equals("Stand")){
+            printAll();
             dealerTurn();
-        } else {
+        } else if (command.equals("Hit")){
             playerCard();
             System.out.println("Player drew a " + player.getLast());
             System.out.println();
@@ -58,17 +64,25 @@ public class Blackjack {
             } else {
                 playerTurn();
             }
+        } else {
+            System.out.println("Invalid command, please try again");
+            playerTurn();
         }
     }
 
     public void dealerTurn(){
         dealerReveal = true;
-        printAll();
+        if(getDealerTotal() < 17){
+            printAll();
+        }
         if(getDealerTotal() > 21){
             System.out.println("The Dealer has busted!");
             System.out.println("You Win!");
         } else if (getDealerTotal() < 17){
             dealerCard();
+            try{
+                Thread.sleep(1500);
+            } catch (InterruptedException e){}
             System.out.println("Dealer drew a " + dealer.getLast());
             System.out.println();
             aceCheck(dealer);
@@ -88,24 +102,33 @@ public class Blackjack {
             System.out.println("Player Wins!");
             System.out.println("Congratulations!");
         }
+        playAgain();
+    }
+
+    public void playAgain(){
+        System.out.println();
+        System.out.println();
+        System.out.println("Want to play again?");
+        String command = getCommand();
+        if(command.equals("Yes")){
+            System.out.println();
+            System.out.println();
+            initGame();
+        } else if(command.equals("No")){
+            System.out.println("Thanks for playing!");
+        } else {
+            System.out.println("Invalid command, please try again");
+            playAgain();
+        }
     }
 
     public void aceCheck(ArrayList<Card> array){
-        int numOfAces = 0;
-        for(Card card : array){
-            if(card.getValue() == 11){
-                numOfAces++;
-            }
-        }
-        if(getTotal(array) > 21 || numOfAces > 0){
+        while(getTotal(array) > 21){
             for(Card card : array){
                 if(card.getValue() == 11){
                     card.setValue(1);
                     break;
                 }
-            }
-            if(numOfAces > 0){
-                aceCheck(array);
             }
         }
     }
@@ -121,6 +144,22 @@ public class Blackjack {
                 return "Hit";
             case "Stand":
                 return "Stand";
+            case "Yes":
+                return "Yes";
+            case "yes":
+                return "Yes";
+            case "Y":
+                return "Yes";
+            case "y":
+                return "Yes";
+            case "No":
+                return "No";
+            case "no":
+                return "No";
+            case "N":
+                return "No";
+            case "n":
+                return "No";
             default:
                 System.out.println("Invalid command, please try again.");
                 return getCommand();

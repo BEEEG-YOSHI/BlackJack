@@ -7,7 +7,11 @@ public class Deck {
 
     public Deck() {
         deck = new ArrayList<>();
+        iniDeck();
 
+    }
+
+    public void iniDeck(){
         for (int value = 2; value <= 14; value++) {
             for (int suit = 0; suit <= 3; suit++) {
                 deck.add(new Card(suit, value));
