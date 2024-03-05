@@ -22,6 +22,13 @@ public class Card {
         }
     }
 
+    public boolean isAce(){
+        if(value == 14){
+            return true;
+        }
+        return false;
+    }
+
     public String toString(){
         String[] suits = {"Hearts","Diamonds","Clubs","Spades"};
         String[] values = {"2","3","4","5","6","7","8","9","10","J","Q","K","A"};

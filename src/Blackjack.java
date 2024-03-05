@@ -61,6 +61,7 @@ public class Blackjack {
             if(getPlayerTotal() > 21){
                 System.out.println("The Player has busted!");
                 System.out.println("You Lose!");
+                playAgain();
             } else {
                 playerTurn();
             }
@@ -78,6 +79,7 @@ public class Blackjack {
         if(getDealerTotal() > 21){
             System.out.println("The Dealer has busted!");
             System.out.println("You Win!");
+            playAgain();
         } else if (getDealerTotal() < 17){
             dealerCard();
             try{
@@ -96,6 +98,8 @@ public class Blackjack {
 
     public void winCheck(){
         if(getDealerTotal() > getPlayerTotal()){
+            dealerReveal = true;
+            printAll();
             System.out.println("Dealer Wins!");
             System.out.println("Better luck next time!");
         } else {
@@ -123,14 +127,7 @@ public class Blackjack {
     }
 
     public void aceCheck(ArrayList<Card> array){
-        while(getTotal(array) > 21){
-            for(Card card : array){
-                if(card.getValue() == 11){
-                    card.setValue(1);
-                    break;
-                }
-            }
-        }
+
     }
 
     public String getCommand(){
