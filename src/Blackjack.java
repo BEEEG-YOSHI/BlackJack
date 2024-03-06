@@ -8,6 +8,13 @@ public class Blackjack {
     Scanner kb;
     private ArrayList<Card> player;
     private ArrayList<Card> dealer;
+
+    private int playerBank;
+
+    private int initialBank;
+
+    private int playerBet;
+
     private boolean dealerReveal;
     public Blackjack(){
         deck = new Deck();
@@ -22,22 +29,74 @@ public class Blackjack {
     }
 
     private void run(){
+        System.out.println("How much money would you like to start with?");
+        playerBank = Integer.valueOf(kb.nextLine());
+        initialBank = playerBank;
+        System.out.println();
+        System.out.println();
         initGame();
     }
 
     public void initGame(){
-        deck.iniDeck();
-        player.clear();
-        dealer.clear();
-        dealerReveal = false;
-        deck.shuffle();
-        dealerCard();
-        dealerCard();
-        playerCard();
-        playerCard();
-        printAll();
-        playerTurn();
+
+        System.out.println("You have a total of: $" + playerBank);
+
+        if(playerBank < 1){
+            System.out.println("You have no money left!");
+            System.out.println("You have no choice but to leave the casino :(");
+        } else {
+            System.out.println("How much money would you like to bet?");
+            int possibleBet = Integer.valueOf(kb.nextLine());
+
+            if(possibleBet > playerBank){
+                System.out.println("You don't have this much money!");
+                System.out.println();
+                initGame();
+            } else {
+                playerBet = possibleBet;
+                System.out.println();
+                System.out.println();
+                System.out.println("You have bet: $" + playerBet);
+                System.out.println();
+                deck.iniDeck();
+                player.clear();
+                dealer.clear();
+                dealerReveal = false;
+                deck.shuffle();
+                dealerCard();
+                dealerCard();
+                playerCard();
+                playerCard();
+                printAll();
+                doubleDown();
+            }
+        }
     }
+
+    public void doubleDown(){
+        System.out.println("Would you like to double down?");
+        String command = getCommand();
+        if(command.equals("Yes")){
+            if(playerBank >= (playerBet * 2)) {
+                playerBet *= 2;
+                playerCard();
+            } else{
+                System.out.println("You don't have enough money to double down");
+                playerTurn();
+            }
+            if(getPlayerTotal() > 21){
+                System.out.println("The Player has busted!");
+                System.out.println("You Lose!");
+                playerBank -= playerBet;
+                playAgain();
+            } else {
+                dealerTurn();
+            }
+        } else {
+            playerTurn();
+        }
+    }
+
 
     public void printAll(){
         printDealer();
@@ -61,6 +120,7 @@ public class Blackjack {
             if(getPlayerTotal() > 21){
                 System.out.println("The Player has busted!");
                 System.out.println("You Lose!");
+                playerBank -= playerBet;
                 playAgain();
             } else {
                 playerTurn();
@@ -79,6 +139,7 @@ public class Blackjack {
         if(getDealerTotal() > 21){
             System.out.println("The Dealer has busted!");
             System.out.println("You Win!");
+            playerBank += playerBet;
             playAgain();
         } else if (getDealerTotal() < 17){
             dealerCard();
@@ -102,9 +163,13 @@ public class Blackjack {
             printAll();
             System.out.println("Dealer Wins!");
             System.out.println("Better luck next time!");
+            playerBank -= playerBet;
         } else {
+            dealerReveal = true;
+            printAll();
             System.out.println("Player Wins!");
             System.out.println("Congratulations!");
+            playerBank += playerBet;
         }
         playAgain();
     }
@@ -120,6 +185,8 @@ public class Blackjack {
             initGame();
         } else if(command.equals("No")){
             System.out.println("Thanks for playing!");
+            System.out.println("You cashed out a total of: $" + playerBank);
+            System.out.println("Your profit was: $" + (playerBank-initialBank));
         } else {
             System.out.println("Invalid command, please try again");
             playAgain();
@@ -127,6 +194,22 @@ public class Blackjack {
     }
 
     public void aceCheck(ArrayList<Card> array){
+
+        int numOfAces = 0;
+        for(Card card : array){
+            if(card.isAce()){
+                numOfAces++;
+            }
+        }
+
+        while((numOfAces > 0) && (getTotal(array) > 21)){
+            for(Card card : array){
+                if(card.isAce()){
+                    card.setValue(1);
+                    break;
+                }
+            }
+        }
 
     }
 

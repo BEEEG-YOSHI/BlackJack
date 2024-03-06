@@ -2,10 +2,12 @@ public class Card {
 
     private int suit;
     private int value;
+    private int number;
 
     public Card(int suit, int value){
         this.suit = suit;
         this.value = value;
+        this.number = value;
     }
 
     public int getSuit() {
@@ -13,9 +15,9 @@ public class Card {
     }
 
     public int getValue() {
-        if(value < 11){
-            return value;
-        } else if(value == 14) {
+        if(number < 11){
+            return number;
+        } else if(number == 14) {
             return 11;
         } else {
             return 10;
@@ -36,6 +38,6 @@ public class Card {
     }
 
     public void setValue(int value){
-        this.value = value;
+        number = value;
     }
 }
