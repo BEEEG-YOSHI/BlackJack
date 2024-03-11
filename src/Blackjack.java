@@ -29,6 +29,13 @@ public class Blackjack {
     }
 
     private void run(){
+        System.out.println();
+        System.out.println("Welcome to Blackjack by Luke Price!");
+        System.out.println("._______.  ._______.");
+        System.out.println("|A      |  |A      |");
+        System.out.println("|   ♠   |  |   ♠   |");
+        System.out.println("|      A|  |      A|");
+        System.out.println("'-------'  '-------'");
         System.out.println("How much money would you like to start with?");
         playerBank = Integer.valueOf(kb.nextLine());
         initialBank = playerBank;
@@ -74,26 +81,36 @@ public class Blackjack {
     }
 
     public void doubleDown(){
-        System.out.println("Would you like to double down?");
-        String command = getCommand();
-        if(command.equals("Yes")){
-            if(playerBank >= (playerBet * 2)) {
-                playerBet *= 2;
-                playerCard();
-            } else{
-                System.out.println("You don't have enough money to double down");
-                playerTurn();
-            }
-            if(getPlayerTotal() > 21){
-                System.out.println("The Player has busted!");
-                System.out.println("You Lose!");
-                playerBank -= playerBet;
-                playAgain();
-            } else {
-                dealerTurn();
-            }
-        } else {
+        if(!(getPlayerTotal() == 9 || getPlayerTotal() == 10 || getPlayerTotal() == 11)){
+            System.out.println("Since your hand does not add to 9, 10, or 11, you are not");
+            System.out.println("permitted to double down. Casino Rules.");
+            System.out.println();
             playerTurn();
+        } else {
+            System.out.println("Would you like to double down?");
+            String command = getCommand();
+            if (command.equals("Yes")) {
+                if (playerBank >= (playerBet * 2)) {
+                    playerBet *= 2;
+                    playerCard();
+                } else {
+                    System.out.println("You don't have enough money to double down");
+                    playerTurn();
+                }
+                if (getPlayerTotal() > 21) {
+                    System.out.println("The Player has busted!");
+                    System.out.println("You Lose!");
+                    playerBank -= playerBet;
+                    playAgain();
+                } else {
+                    dealerTurn();
+                }
+            } else if (command.equals("No")) {
+                playerTurn();
+            } else {
+                System.out.println("Invalid command, please try again.");
+                doubleDown();
+            }
         }
     }
 
@@ -206,6 +223,7 @@ public class Blackjack {
             for(Card card : array){
                 if(card.isAce()){
                     card.setValue(1);
+                    numOfAces--;
                     break;
                 }
             }
